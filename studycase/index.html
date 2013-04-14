@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Hint Test</title>
+<script type="text/javascript">
+var xmlHttp;
+function createXMLHttpRequest(){
+	var xmlHttp = null;
+	if(window.XMLHttpRequest){
+		xmlHttp = new XMLHttpRequest();
+	}
+	else if(window.ActiveXObject){
+		xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	return xmlHttp;
+}
+function stateChanged(){
+	if(xmlHttp.readyState == 4){
+		document.getElementById("txtHint").innerHTML = xmlHttp.responseText;
+	}
+}
+function showHint(str){
+	if(str.length==0){
+		document.getElementById("txtHint").innerHTML == "";
+		return;
+	}
+    xmlHttp = createXMLHttpRequest();
+	if(null == xmlHttp){
+		alert("Browser does not support HTTP Request");
+		return;
+	}
+	var url = "hint.php";
+	url=url+"?q="+str;
+	url=url+"&sid="+Math.random();
+	xmlHttp.onreadystatechange = stateChanged;
+	xmlHttp.open("GET",url,true);
+	xmlHttp.send(null);
+}
+
+</script>
+</head>
+
+<body>
+<?php phpinfo();
+?>
+<form>
+<input type="text" id="txt1" onkeyup="showHint(this.value)"/>
+</form>
+<p>Suggestion: <span id="txtHint"/>
+</p>
+</body>
+</html>

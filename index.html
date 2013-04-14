@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.js"></script>
+<script type="text/javascript" src="js/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.10.2.custom.min.css"></link>
+<script>
+$(function(){
+	$("tr:odd").addClass("odd");
+	$("tr:even").addClass("even");
+
+    var $div_li =$("div.tab_menu ul li");
+    $div_li.click(function(){
+		$(this).addClass("selected")            //当前<li>元素高亮
+			   .siblings().removeClass("selected");  //去掉其它同辈<li>元素的高亮
+        var index =  $div_li.index(this);  // 获取当前点击的<li>元素 在 全部li元素中的索引。
+		$("div.tab_box > div")   	//选取子节点。不选取子节点的话，会引起错误。如果里面还有div 
+				.eq(index).show()   //显示 <li>元素对应的<div>元素
+				.siblings().hide(); //隐藏其它几个同辈的<div>元素
+	}).hover(function(){
+		$(this).addClass("hover");
+	},function(){
+		$(this).removeClass("hover");
+	});
+
+
+
+    $("#querybutton").click(function(){
+        $.post("queryOr.php",{property : $("#property").val(),queryInfo : $("#querycontent").val()},function(data,textStatus){
+            $("tr:gt(0)").remove();
+        	$("table").append(data);
+        });
+    });
+
+    $("#datatabletest").dataTable({
+        "bAutoWidth":false,
+        "bProcessing": true,
+        "bServerSide": true,
+        "bJQueryUI":true,
+        "sAjaxSource": "querytechtopic.php",
+        "aoColumnDefs":[
+                        {"sWidth":"20%","aTargets":[0,1,2,3]},
+                        {"bSortable":false,"aTargets":[4,5,6,7]}
+                        ]
+         });
+    
+})
+
+function newdialog(){
+	//window.open("newWindow.html");
+	//window.open("newWindow.html","123","height=200,width=300,top=50,left=50,toolbar=no,menuber=no,scrollbars=no,directories=no,location=no");
+	//计算弹出页面在窗口的left 和 top 位置  尽力要求在中间
+var ClientWidth = document.documentElement.clientWidth;
+ var ClientHeight =  document.documentElement.clientHeight;
+ //弹出窗口的左上角坐标 (left,top)
+ var left = (ClientWidth - 300) / 2;
+var top = (ClientHeight - 200) / 2;
+document.body.style.backgroundColor = "gray";
+window.open("newWindow.html", "测试弹出窗口", "height=200,width=300"+ ",location=no ,menubar=no,left=" + left + ",top=" + top + "location=no");
+}
+
+function newdialog2(){
+	alert('2');
+	window.showModalDialog("newWindow.html");
+}
+</script>
+<style>
+body{
+font-family:"Microsoft YaHei",微软雅黑" ;
+}
+.even{background:#FFF38F;}
+.odd{background:#FFFFEE;}
+table{
+border:1px solid;
+border-collapse:collapse;
+}
+#main_content{
+margin-left:100px;
+width:800px;
+height:2000px;
+align:center;
+background:#EEEEEE;
+}
+ .tab { width:240px;margin:50px;}
+ .tab_menu { clear:both;}
+ .tab_menu li { float:left; text-align:center; cursor:pointer; list-style:none; padding:1px 6px; margin-right:4px; background:#F1F1F1; border:1px solid #898989; border-bottom:none;}
+ .tab_menu li.hover { background:#DFDFDF;}
+ .tab_menu li.selected { color:#FFF; background:#6D84B4;}
+ .tab_box { clear:both; border:1px solid #898989; height:100px;}
+ .hide{display:none}
+</style>
+<title>or manager</title>
+</head>
+<body>
+
+<div></div>
+
+<div id="main_content">
+<div class="tab_menu">
+<ul>
+<li class="selected">需求管理</li>
+<li>技术例会</li>
+<li>技术积分</li> 
+</ul>
+</div>
+<div class="tab_box">
+<div>  <form id="queryform" action="#">
+<p>属性:
+<select id="property">
+<option value="rid">需求编号</option>
+<option value="rname">需求名称</option>
+<option value="rdes">需求描述</option>
+<option value="responsible">责任人</option>
+</select>
+查询:
+<input type="text" id="querycontent"></input>
+<input type="button" id="querybutton" value="query"></input>
+<input type="button" id="newwindow" value="newWindow" onClick="newdialog2();"></input>
+</p>
+</form>
+<br/>
+<table border="1"  id="ortable">
+<tr><th>需求编号</th><th>需求名称</th><th>需求描述</th><th>分析责任人</th></tr>
+</table></div>
+
+
+<div class="hide" >
+ <table class="display" id="datatabletest">
+       <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    名字
+                </th>
+                <th>
+                    ZipCode
+                </th>
+                <th>
+                    操作
+                </th>
+                <th>
+                    操作
+                </th>
+                <th>
+                    操作
+                </th>
+                <th>
+                    操作
+                </th>
+                <th>
+                    操作
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+
+</div>
+<div class="hide"></div>
+</div>
+
+</div>
+</body>
+</html>

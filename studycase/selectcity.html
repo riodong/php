@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>selectcity</title>
+<script type="text/javascript">
+var xmlHttpRequest;
+function createXMLHttpRequest(){
+	var xmlHttpRequest;
+	if(window.XMLHttpRequest){
+		xmlHttpRequest = new XMLHttpRequest();
+	}
+	else if(window.ActiveXObject){
+		xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	return xmlHttpRequest;
+}
+
+function getCityInfo(cityname){
+	xmlHttpRequest = createXMLHttpRequest();
+	var url = "getCityInfo.php?q="+cityname+"&sid="+Math.random();
+	xmlHttpRequest.onreadystatechange = cityInfoHandle;
+	xmlHttpRequest.open("GET",url,true);
+	xmlHttpRequest.send(null);
+}
+
+function cityInfoHandle(){
+	if(xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200){
+		document.getElementById("cityHit").innerHTML = xmlHttpRequest.responseText;
+	}
+}
+</script>
+</head>
+<body>
+
+<form>
+input city name : <input type="text" onkeyup="getCityInfo(this.value)"></input>
+</form>
+
+<p>
+<div id="cityHit"></div>
+</p>
+</body>
+</html>
